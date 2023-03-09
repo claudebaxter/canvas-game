@@ -37,6 +37,7 @@ class Projectile {
         c.fill()
     }
     update() {
+        this.draw()
         this.x = this.x + this.velocity.x
         this.y = this.y + this.velocity.y
     }
@@ -59,12 +60,14 @@ const projectile = new Projectile(
         y: 1
     }
 )
+const projectiles = [projectile];
 
 function animate() {
     requestAnimationFrame(animate)
-    projectile.draw()
-    projectile.update()
-}
+    projectiles.forEach(projectile => {
+        projectile.update();
+    })
+};
 
 addEventListener('click', (event) => {
     
