@@ -80,8 +80,8 @@ function spawnEnemies() {
         const radius = 30
         const color = 'green'
         const angle = Math.atan2(
-            canvas.height - y / 2, 
-            canvas.width - x / 2)
+            canvas.height / 2 - y, 
+            canvas.width / 2 - x)
     
         const velocity = {
             x: Math.cos(angle),
