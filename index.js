@@ -45,11 +45,22 @@ const y = canvas.height / 2;
 const player = new Player(x, y, 30, 'blue');
 player.draw();
 
+function animate() {
+    requestAnimationFrame(animate)
+    console.log('go')
+}
+
 addEventListener('click', (event) => {
     console.log(event);
     const projectile = new Projectile(
-        event.clientX, event.clientY, 5, 'red', null
+        canvas.width / 2, 
+        canvas.height / 2, 
+        5, 
+        'red', 
+        null
     )
 
     projectile.draw()
 });
+
+animate();
