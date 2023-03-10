@@ -1,3 +1,4 @@
+console.log(gsap);
 const canvas = document.querySelector('canvas');
 //using "c" instead of "context" because this will be repeated a lot
 const c = canvas.getContext('2d');
@@ -131,12 +132,19 @@ function animate() {
         projectiles.forEach((projectile, projectileIndex) => {
             const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y)
             
-            //objects touch
+            //projectile enemy collision 
             if (dist - enemy.radius - projectile.radius < 1) {
-                setTimeout(() => {
-                    enemies.splice(index, 1)
-                    projectiles.splice(projectileIndex, 1)
-                }, 0)
+                if (enemy.radius - 10 > 10) {
+                    enemy.radius -= 10
+                    setTimeout(() => {
+                        projectiles.splice(projectileIndex, 1)
+                    }, 0)
+                } else {
+                    setTimeout(() => {
+                        enemies.splice(index, 1)
+                        projectiles.splice(projectileIndex, 1)
+                    }, 0)
+                }
             }
         });
     })
