@@ -1,5 +1,5 @@
 const canvas = document.querySelector('canvas');
-//using c instead of context because this will be repeated a lot
+//using "c" instead of "context" because this will be repeated a lot
 const c = canvas.getContext('2d');
 
 canvas.width = innerWidth;
@@ -77,7 +77,7 @@ function spawnEnemies() {
     setInterval(() => {
         const radius = 30
         const x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius
-        const y = Math.random() * canvas.height
+        const y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius
         const color = 'green'
         const angle = Math.atan2(
             canvas.height / 2 - y, 
