@@ -133,7 +133,7 @@ function animate() {
             
             //projectile enemy collision 
             if (dist - enemy.radius - projectile.radius < 1) {
-                if (enemy.radius - 10 > 10) {
+                if (enemy.radius - 10 > 5) {
                     gsap.to(enemy, {
                         radius: enemy.radius - 10
                     })
