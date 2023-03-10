@@ -103,7 +103,8 @@ function spawnEnemies() {
 let animationId
 function animate() {
     animationId = requestAnimationFrame(animate)
-    c.clearRect(0, 0, canvas.width, canvas.height)
+    c.fillStyle = 'black'
+    c.fillRect(0, 0, canvas.width, canvas.height)
     player.draw();
     projectiles.forEach((projectile, index) => {
         projectile.update();
