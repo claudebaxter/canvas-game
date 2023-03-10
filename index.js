@@ -1,4 +1,3 @@
-console.log(gsap);
 const canvas = document.querySelector('canvas');
 //using "c" instead of "context" because this will be repeated a lot
 const c = canvas.getContext('2d');
@@ -135,7 +134,9 @@ function animate() {
             //projectile enemy collision 
             if (dist - enemy.radius - projectile.radius < 1) {
                 if (enemy.radius - 10 > 10) {
-                    enemy.radius -= 10
+                    gsap.to(enemy, {
+                        radius: enemy.radius - 10
+                    })
                     setTimeout(() => {
                         projectiles.splice(projectileIndex, 1)
                     }, 0)
