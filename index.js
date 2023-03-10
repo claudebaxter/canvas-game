@@ -74,7 +74,7 @@ const projectiles = [];
 const enemies = [];
 
 function spawnEnemies() {
-    //setInterval(() => {
+    setInterval(() => {
         const radius = Math.random() * (30 - 4) + 4
 
         let x 
@@ -97,8 +97,7 @@ function spawnEnemies() {
             y: Math.sin(angle)
         }
         enemies.push(new Enemy(x, y, radius, color, velocity))
-        console.log(enemies);
-    //}, 1000)
+    }, 1000)
 }
 
 function animate() {
