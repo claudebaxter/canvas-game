@@ -3,6 +3,7 @@ const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
 
 const scoreEl = document.querySelector('#scoreEl');
+const modal = document.querySelector('#modal');
 
 canvas.width = innerWidth;
 canvas.height = innerHeight;
@@ -172,6 +173,7 @@ function animate() {
         const dist = Math.hypot(player.x - enemy.x, player.y - enemy.y)
         if (dist - enemy.radius - player.radius < 1) {
             cancelAnimationFrame(animationId)
+            modal.style.display = 'block'
         }
 
         for (let projectilesIndex = projectiles.length - 1; projectilesIndex >= 0; projectilesIndex--) {
