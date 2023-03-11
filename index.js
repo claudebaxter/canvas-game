@@ -160,7 +160,10 @@ function animate() {
             }, 0)
         }
     })
-    enemies.forEach((enemy, index) => {
+
+    for (let index = enemies.length - 1; index >= 0; index--) {
+        const enemy = enemies[index]
+    
         enemy.update()
 
         //end game (player death)
@@ -212,7 +215,7 @@ function animate() {
                 }
             }
         });
-    })
+    }
 };
 
 addEventListener('click', (event) => {
