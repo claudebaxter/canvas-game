@@ -140,26 +140,28 @@ function animate() {
     c.fillStyle = 'rgb(0, 0, 0, 0.1)'
     c.fillRect(0, 0, canvas.width, canvas.height)
     player.draw();
-    particles.forEach((particle, index) => {
+
+    for (let index = particles.length - 1; index >= 0; index--) {
+        const particle = particles[index]
         if (particle.alpha <= 0) {
             particles.splice(index, 1)
         } else {
             particle.update();
         }
-    });
-    projectiles.forEach((projectile, index) => {
-        projectile.update();
+    };
 
+    for (let index = projectiles.length - 1; index >= 0; index--) {
+        const projectile = projectiles[index]
+
+        projectile.update()   
         //remove projectiles from left/right/top/bottom edges of screen
         if (projectile.x + projectile.radius < 0 || 
             projectile.x - projectile.radius > canvas.width ||
             projectile.y + projectile.radius < 0 ||
             projectile.y - projectile.radius > canvas.height) {
-            setTimeout(() => {
-                projectiles.splice(index, 1)
-            }, 0)
+            projectiles.splice(index, 1)
         }
-    })
+    };
 
     for (let index = enemies.length - 1; index >= 0; index--) {
         const enemy = enemies[index]
