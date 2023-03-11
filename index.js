@@ -65,7 +65,7 @@ class Enemy {
     }
 };
 
-const friction = 0.94; //closer to zero moves particles more slowly
+const friction = 0.98; //closer to zero moves particles more slowly
 class Particle {
     constructor(x, y, radius, color, velocity) {
         this.x = x
