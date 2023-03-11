@@ -168,10 +168,21 @@ function animate() {
             
             //projectile enemy collision 
             if (dist - enemy.radius - projectile.radius < 1) {
+
+                //create enemy particle explosion
                 for (let i = 0; i < 8; i++) {
-                    particles.push(new Particle(projectile.x, projectile.y, 3, enemy.color, {
-                        x: Math.random() - 0.5,
-                        y: Math.random() - 0.5}))
+                    particles.push(
+                        new Particle(
+                            projectile.x, 
+                            projectile.y, 
+                            Math.random() * 2, 
+                            enemy.color, 
+                            {
+                            x: Math.random() - 0.5,
+                            y: Math.random() - 0.5
+                            }
+                        )
+                    )
                 }
                 if (enemy.radius - 10 > 5) {
                     gsap.to(enemy, {
