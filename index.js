@@ -172,7 +172,9 @@ function animate() {
             cancelAnimationFrame(animationId)
         }
 
-        projectiles.forEach((projectile, projectileIndex) => {
+        for (let projectilesIndex = projectiles.length - 1; projectilesIndex >= 0; projectilesIndex--) {
+            const projectile = projectiles[projectilesIndex]
+
             const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y)
             
             //projectile enemy collision 
@@ -201,7 +203,7 @@ function animate() {
                         radius: enemy.radius - 10
                     })
                     setTimeout(() => {
-                        projectiles.splice(projectileIndex, 1)
+                        projectiles.splice(projectilesIndex, 1)
                     }, 0)
                 } else {
                     //remove enemy if they are destroyed
@@ -210,11 +212,11 @@ function animate() {
 
                     setTimeout(() => {
                         enemies.splice(index, 1)
-                        projectiles.splice(projectileIndex, 1)
+                        projectiles.splice(projectilesIndex, 1)
                     }, 0)
                 }
             }
-        });
+        }
     }
 };
 
