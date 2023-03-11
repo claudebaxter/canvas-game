@@ -94,6 +94,7 @@ const y = canvas.height / 2;
 const player = new Player(x, y, 10, 'white');
 const projectiles = [];
 const enemies = [];
+const particles = [];
 
 function spawnEnemies() {
     setInterval(() => {
@@ -128,6 +129,9 @@ function animate() {
     c.fillStyle = 'rgb(0, 0, 0, 0.1)'
     c.fillRect(0, 0, canvas.width, canvas.height)
     player.draw();
+    particles.forEach(particle => {
+        particle.update();
+    });
     projectiles.forEach((projectile, index) => {
         projectile.update();
 
@@ -155,6 +159,11 @@ function animate() {
             
             //projectile enemy collision 
             if (dist - enemy.radius - projectile.radius < 1) {
+                for (let i = 0; i < 8; i++) {
+                    particles.push(new Particle(projectile.x, projectile.y, 3, enemy.color, {
+                        x: Math.random() - 0.5,
+                        y: Math.random() - 0.5}))
+                }
                 if (enemy.radius - 10 > 5) {
                     gsap.to(enemy, {
                         radius: enemy.radius - 10
