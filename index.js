@@ -170,7 +170,7 @@ function animate() {
             if (dist - enemy.radius - projectile.radius < 1) {
 
                 //create enemy particle explosion
-                for (let i = 0; i < 8; i++) {
+                for (let i = 0; i < enemy.radius * 2; i++) {
                     particles.push(
                         new Particle(
                             projectile.x, 
@@ -178,8 +178,8 @@ function animate() {
                             Math.random() * 2, 
                             enemy.color, 
                             {
-                            x: Math.random() - 0.5,
-                            y: Math.random() - 0.5
+                            x: (Math.random() - 0.5) * (Math.random() * 8),
+                            y: (Math.random() - 0.5) * (Math.random() * 8)
                             }
                         )
                     )
