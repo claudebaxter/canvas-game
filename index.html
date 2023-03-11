@@ -1,10 +1,31 @@
 <style>
     body {
         margin: 0;
+        font-family: consolas;
     }
 </style>
-<div style="position: absolute; color: red; font-family: consolas; padding: 8px; font-size: 14px; user-select: none;">
-    <span>Score: <span id="scoreEl">0</span></span>
+<div style="
+    position: absolute; 
+    color: red;  
+    padding: 8px; 
+    font-size: 14px; 
+    user-select: none;">
+        <span>Score: <span id="scoreEl">0</span></span>
+</div>
+<div style="
+    position: absolute;
+    background-color: white;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    padding: 16px;
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    border-radius: 15px;">
+    <label style="font-size: 14px; color: grey;">Game Over</label>
+    <h1 style="font-size: 48px; color: red; margin-bottom: 0; margin-top: 8px;">0</h1>
+    <p style="color: grey; margin: 0; font-size: 13px;">POINTS</p>
 </div>
 <canvas></canvas>
 <script 
