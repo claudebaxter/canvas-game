@@ -5,6 +5,7 @@ const c = canvas.getContext('2d');
 const scoreEl = document.querySelector('#scoreEl');
 const modal = document.querySelector('#modal');
 const modalScore = document.querySelector('#modalScore');
+const button = document.querySelector('#button')
 
 canvas.width = innerWidth;
 canvas.height = innerHeight;
@@ -103,10 +104,12 @@ const x = canvas.width / 2;
 const y = canvas.height / 2;
 
 
-const player = new Player(x, y, 10, 'white');
-const projectiles = [];
-const enemies = [];
-const particles = [];
+let player = new Player(x, y, 10, 'white');
+let projectiles = [];
+let enemies = [];
+let particles = [];
+let animationId;
+let score = 0;
 
 function spawnEnemies() {
     setInterval(() => {
@@ -135,8 +138,6 @@ function spawnEnemies() {
     }, 1000)
 }
 
-let score = 0;
-let animationId;
 function animate() {
     animationId = requestAnimationFrame(animate)
     c.fillStyle = 'rgb(0, 0, 0, 0.1)'
@@ -235,6 +236,12 @@ addEventListener('click', (event) => {
     projectiles.push(new Projectile(
         canvas.width/2, canvas.height / 2, 5, 'white', velocity
     ))
+});
+
+button.addEventListener('click', () => {
+    enemies = [];
+    projectiles = [];
+
 });
 
 animate();
