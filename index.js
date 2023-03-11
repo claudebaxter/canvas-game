@@ -202,18 +202,13 @@ function animate() {
                     gsap.to(enemy, {
                         radius: enemy.radius - 10
                     })
-                    setTimeout(() => {
-                        projectiles.splice(projectilesIndex, 1)
-                    }, 0)
+                    projectiles.splice(projectilesIndex, 1)
                 } else {
                     //remove enemy if they are destroyed
                     score += 150
                     scoreEl.innerHTML = score
-
-                    setTimeout(() => {
-                        enemies.splice(index, 1)
-                        projectiles.splice(projectilesIndex, 1)
-                    }, 0)
+                    enemies.splice(index, 1)
+                    projectiles.splice(projectilesIndex, 1)
                 }
             }
         }
