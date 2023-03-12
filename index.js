@@ -254,6 +254,7 @@ addEventListener('click', (event) => {
 button.addEventListener('click', () => {
     init()
     animate()
+    spawnEnemies()
     modal.style.display = 'none'
 });
 
