@@ -264,5 +264,11 @@ startButton.addEventListener('click', () => {
     init()
     animate()
     spawnEnemies()
-    startModal.style.display = 'none'
+    //startModal.style.display = 'none'
+    gsap.to('#startModal', {
+        opacity: 0,
+        scale: 0.8,
+        duration: 0.3,
+        ease: 'expo.in' //google gsap visualizer
+    })
 });
