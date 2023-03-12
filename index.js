@@ -111,6 +111,16 @@ let particles = [];
 let animationId;
 let score = 0;
 
+function init() {
+    player = new Player(x, y, 10, 'white')
+    projectiles = []
+    enemies = []
+    particles = []
+    animationId
+    score = 0
+    scoreEl.innerHTML = score
+};
+
 function spawnEnemies() {
     setInterval(() => {
         const radius = Math.random() * (30 - 4) + 4
@@ -239,9 +249,9 @@ addEventListener('click', (event) => {
 });
 
 button.addEventListener('click', () => {
-    enemies = [];
-    projectiles = [];
-
+    init()
+    animate()
+    modal.style.display = 'none'
 });
 
 animate();
