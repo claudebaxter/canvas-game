@@ -109,6 +109,7 @@ let projectiles = [];
 let enemies = [];
 let particles = [];
 let animationId;
+let inetervalId;
 let score = 0;
 
 function init() {
@@ -122,7 +123,8 @@ function init() {
 };
 
 function spawnEnemies() {
-    setInterval(() => {
+    intervalId = setInterval(() => {
+        console.log('intervalId');
         const radius = Math.random() * (30 - 4) + 4
 
         let x 
@@ -185,6 +187,7 @@ function animate() {
         const dist = Math.hypot(player.x - enemy.x, player.y - enemy.y)
         if (dist - enemy.radius - player.radius < 1) {
             cancelAnimationFrame(animationId)
+            clearInterval(intervalId)
             modal.style.display = 'block'
             modalScore.innerHTML = score
         }
