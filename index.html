@@ -43,7 +43,36 @@
         RESTART
     </button>
 </div>
-<canvas></canvas>
+
+<div 
+    id="startModal"
+    style="
+    position: absolute;
+    background-color: white;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    padding: 16px;
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    border-radius: 15px;">
+    <h1 style="font-size: 24px; color: red; margin-bottom: 0; margin-top: 8px;">ASATEROIDS</h1>
+    <button 
+        id="startButton"
+        style="margin-top: 12px;
+        background-color: blue;
+        border: none;
+        border-radius: 15px;
+        color: white;
+        padding: 8px 16px;
+        cursor: pointer;
+        "
+        >
+        START
+    </button>
+</div>
+<canvas style="background-color: black;"></canvas>
 <script 
     src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js" 
     integrity="sha512-f8mwTB+Bs8a5c46DEm7HQLcJuHMBaH/UFlcgyetMqqkvTcYg4g5VXsYR71b3qC82lZytjNYvBj2pf0VekA9/FQ==" 

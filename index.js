@@ -5,7 +5,9 @@ const c = canvas.getContext('2d');
 const scoreEl = document.querySelector('#scoreEl');
 const modal = document.querySelector('#modal');
 const modalScore = document.querySelector('#modalScore');
-const button = document.querySelector('#button')
+const button = document.querySelector('#button');
+const startButton = document.querySelector('#startButton');
+const startModal = document.querySelector('#startModal');
 
 canvas.width = innerWidth;
 canvas.height = innerHeight;
@@ -258,5 +260,9 @@ button.addEventListener('click', () => {
     modal.style.display = 'none'
 });
 
-animate();
-spawnEnemies();
+startButton.addEventListener('click', () => {
+    init()
+    animate()
+    spawnEnemies()
+    startModal.style.display = 'none'
+});
