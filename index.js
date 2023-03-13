@@ -121,7 +121,7 @@ function init() {
     particles = []
     animationId
     score = 0
-    scoreEl.innerHTML = score
+    scoreEl.innerHTML = 0
 };
 
 function spawnEnemies() {
