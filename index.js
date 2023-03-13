@@ -13,18 +13,14 @@ canvas.width = innerWidth;
 canvas.height = innerHeight;
 
 class Player {
-    constructor(x, y, radius, color) {
+    constructor(x, y, radius, playerImage) {
         this.x = x
         this.y = y
         this.radius = radius
-        this.color = color
+        this.image = document.querySelector('#playerImage')
     }
     draw() {
-        c.beginPath()
-        c.arc(this.x, this.y, this.radius, 
-            0, Math.PI * 2, false)
-        c.fillStyle = this.color
-        c.fill()
+            c.drawImage(this.image, this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2)
     }
 };
 
@@ -106,7 +102,7 @@ const x = canvas.width / 2;
 const y = canvas.height / 2;
 
 
-let player = new Player(x, y, 10, 'white');
+let player = new Player(x, y, 15);
 let projectiles = [];
 let enemies = [];
 let particles = [];
@@ -115,7 +111,7 @@ let inetervalId;
 let score = 0;
 
 function init() {
-    player = new Player(x, y, 10, 'white')
+    player = new Player(x, y, 15)
     projectiles = []
     enemies = []
     particles = []
