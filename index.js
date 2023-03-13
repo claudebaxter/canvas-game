@@ -17,6 +17,7 @@ const iconFiles = [
     "icon-ada.svg",
     "icon-atom.svg",
     "icon-bnb.svg",
+    "icon-btc.svg",
     "icon-doge.svg",
     "icon-eth.svg",
     "icon-ltc.svg",
