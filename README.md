@@ -1,6 +1,6 @@
 # ASAteroids
 
-ASAteroids is a modification of canvas-game, from the Games 101 course at chriscourses.com, located <a href=https://chriscourses.com/courses/javascript-games/videos/project-setup title="Chris Courses">here.</a>
+ASAteroids is a modification of Base Defense Game, from the Games 101 course at chriscourses.com, located <a href=https://chriscourses.com/courses/javascript-games/videos/project-setup title="Chris Courses">here.</a>
 
 ASAteroids is a towere-defense / shooter game similar to asteroids. 
 
