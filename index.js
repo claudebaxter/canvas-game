@@ -190,7 +190,12 @@ function animate() {
         if (dist - enemy.radius - player.radius < 1) {
             cancelAnimationFrame(animationId)
             clearInterval(intervalId)
+
             modal.style.display = 'block'
+            gsap.fromTo('#modal', {scale: 0.8, opacity: 0}, {
+                scale: 1, opacity: 1,
+                ease: 'expo'
+            })
             modalScore.innerHTML = score
         }
 
