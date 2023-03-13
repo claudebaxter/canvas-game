@@ -262,7 +262,15 @@ button.addEventListener('click', () => {
     init()
     animate()
     spawnEnemies()
-    modal.style.display = 'none'
+    gsap.to('#modal', {
+        opacity: 0,
+        scale: 0.8,
+        duration: 0.2,
+        ease: 'expo.in', 
+        onComplete: () => {
+            modal.style.display = 'none'
+        }
+    })
 });
 
 startButton.addEventListener('click', () => {
