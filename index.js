@@ -1,6 +1,23 @@
 const canvas = document.querySelector('canvas');
 //using "c" instead of "context" because this will be repeated a lot
 const c = canvas.getContext('2d');
+//enemy icons directory and array
+const iconDir = "./";
+const iconFiles = [
+    "icon-ada.svg",
+    "icon-atom.svg",
+    "icon-bnb.svg",
+    "icon-doge.svg",
+    "icon-eth.svg",
+    "icon-ltc.svg",
+    "icon-shib.svg",
+    "icon-sol.svg",
+    "icon-trx.svg",
+    "icon-usdt.svg",
+    "icon-xmr.svg"
+];
+const icons = iconFiles.map(file => iconDir + file);
+console.log(icons);
 
 const scoreEl = document.querySelector('#scoreEl');
 const modal = document.querySelector('#modal');
@@ -47,19 +64,22 @@ class Projectile {
 };
 
 class Enemy {
-    constructor(x, y, radius, color, velocity) {
+    constructor(x, y, radius, color, velocity, enemyImage) {
         this.x = x
         this.y = y
         this.radius = radius 
         this.color = color
         this.velocity = velocity
+        this.enemyImage = enemyImage;
     }
     draw() {
-        c.beginPath()
-        c.arc(this.x, this.y, this.radius, 
-            0, Math.PI * 2, false)
-        c.fillStyle = this.color
-        c.fill()
+        c.drawImage(
+            this.enemyImage,
+            this.x - this.radius,
+            this.y - this.radius,
+            this.radius * 2,
+            this.radius * 2
+        )
     }
     update() {
         this.draw()
@@ -144,7 +164,9 @@ function spawnEnemies() {
             x: Math.cos(angle),
             y: Math.sin(angle)
         }
-        enemies.push(new Enemy(x, y, radius, color, velocity))
+        const enemyImage = new Image();
+        enemyImage.src = icons[Math.floor(Math.random() * icons.length)];
+        enemies.push(new Enemy(x, y, radius, color, velocity, enemyImage))
     }, 1000)
 }
 
