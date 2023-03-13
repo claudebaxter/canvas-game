@@ -1,3 +1,13 @@
+/*ASAteroids is a modified version of Base Defense Game from 
+Chris' Courses, which can be found here: 
+https://chriscourses.com/courses/javascript-games/videos/project-setup 
+
+TODOs:
+
+1) Add upgrade items / upgrade particle physics
+2) Add leaderboard to track high scores
+3) Add boss fights*/
+
 const canvas = document.querySelector('canvas');
 //using "c" instead of "context" because this will be repeated a lot
 const c = canvas.getContext('2d');
