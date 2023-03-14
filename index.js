@@ -182,6 +182,8 @@ function spawnEnemies() {
 }
 
 function animate() {
+    const backgroundMusic = document.querySelector('#backgroundMusic');
+backgroundMusic.play();
     animationId = requestAnimationFrame(animate)
     c.fillStyle = 'rgb(0, 0, 0, 0.1)'
     c.fillRect(0, 0, canvas.width, canvas.height)
@@ -219,6 +221,9 @@ function animate() {
         if (dist - enemy.radius - player.radius < 1) {
             cancelAnimationFrame(animationId)
             clearInterval(intervalId)
+            backgroundMusic.pause();
+            backgroundMusic.currentTime = 0;
+
 
             modal.style.display = 'block'
             gsap.fromTo('#modal', {scale: 0.8, opacity: 0}, {
