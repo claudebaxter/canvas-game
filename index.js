@@ -12,8 +12,8 @@ const canvas = document.querySelector('canvas');
 //using "c" instead of "context" because this will be repeated a lot
 const c = canvas.getContext('2d');
 //enemy icons directory and array
-const iconDir = "./";
-const iconFiles = [
+const enemyDir = "./enemies/";
+const enemyFiles = [
     "icon-ada.svg",
     "icon-atom.svg",
     "icon-bnb.svg",
@@ -27,8 +27,21 @@ const iconFiles = [
     "icon-usdt.svg",
     "icon-xmr.svg"
 ];
-const icons = iconFiles.map(file => iconDir + file);
-console.log(icons);
+const enemySprite = enemyFiles.map(file => enemyDir + file);
+console.log(enemySprite);
+//upgrade icons directory and array
+const upgradeDir = "./upgrades/";
+const upgradeFiles = [
+    "icon-afd.svg",
+    "icon-algo.svg",
+    "icon-dc.svg",
+    "icon-grad.svg",
+    "icon-ogs.svg",
+    "icon-puddin.svg",
+    "icon-trts.svg"
+];
+const upgradeSprite = upgradeFiles.map(file => upgradeDir + file);
+console.log(upgradeSprite);
 
 const scoreEl = document.querySelector('#scoreEl');
 const modal = document.querySelector('#modal');
@@ -99,6 +112,31 @@ class Enemy {
     }
 };
 
+class Upgrade {
+    constructor(x, y, radius, color, velocity, upgradeImage) {
+        this.x = x
+        this.y = y
+        this.radius = radius 
+        this.color = color
+        this.velocity = velocity
+        this.upgradeImage = upgradeImage;
+    }
+    draw() {
+        c.drawImage(
+            this.upgradeImage,
+            this.x - this.radius,
+            this.y - this.radius,
+            this.radius * 2,
+            this.radius * 2
+        )
+    }
+    update() {
+        this.draw()
+        this.x = this.x + this.velocity.x
+        this.y = this.y + this.velocity.y
+    }
+};
+
 const friction = 0.98; //closer to zero moves particles more slowly
 class Particle {
     constructor(x, y, radius, color, velocity) {
@@ -137,8 +175,10 @@ let player = new Player(x, y, 15);
 let projectiles = [];
 let enemies = [];
 let particles = [];
+let upgrades = [];
 let animationId;
-let inetervalId;
+let intervalId;
+let upgradeInterval
 let score = 0;
 
 function init() {
@@ -146,6 +186,7 @@ function init() {
     projectiles = []
     enemies = []
     particles = []
+    upgrades = []
     animationId
     score = 0
     scoreEl.innerHTML = 0
@@ -177,9 +218,41 @@ function spawnEnemies() {
             y: Math.sin(angle)
         }
         const enemyImage = new Image();
-        enemyImage.src = icons[Math.floor(Math.random() * icons.length)];
+        enemyImage.src = enemySprite[Math.floor(Math.random() * enemySprite.length)];
         enemies.push(new Enemy(x, y, radius, color, velocity, enemyImage))
     }, 1000)
+}
+
+function spawnUpgrades() {
+    upgradeInterval = setInterval(() => {
+        const radius = 20
+
+        let x
+        let y 
+
+        if (Math.random() < 0.5) {
+            x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius
+            y = Math.random() * canvas.height
+        } else {
+            x = Math.random() * canvas.width
+            y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius
+        }
+
+        const color = 'purple'
+
+        const angle = Math.atan2(
+            canvas.height / 2 - y, 
+            canvas.width / 2 - x)
+    
+        const velocity = {
+            x: Math.cos(angle),
+            y: Math.sin(angle)
+        }
+        const upgradeImage = new Image();
+        upgradeImage.src = upgradeSprite[Math.floor(Math.random() * upgradeSprite.length)];
+        upgrades.push(new Upgrade(x, y, radius, color, velocity, upgradeImage))
+        console.log('New upgrade deployed!', upgrades)
+    }, 60000)
 }
 
 function checkMusicToggle() {
@@ -222,6 +295,11 @@ function animate() {
         }
     };
 
+    for (let index = upgrades.length -1; index >= 0; index--) {
+        const upgrade = upgrades[index]
+        upgrade.update()
+    }
+
     for (let index = enemies.length - 1; index >= 0; index--) {
         const enemy = enemies[index]
     
@@ -231,7 +309,7 @@ function animate() {
         const dist = Math.hypot(player.x - enemy.x, player.y - enemy.y)
         if (dist - enemy.radius - player.radius < 1) {
             cancelAnimationFrame(animationId)
-            clearInterval(intervalId)
+            clearInterval(intervalId, upgradeInterval)
             backgroundMusic.pause();
             backgroundMusic.currentTime = 0;
 
@@ -307,6 +385,7 @@ button.addEventListener('click', () => {
     init()
     animate()
     spawnEnemies()
+    spawnUpgrades()
     gsap.to('#modal', {
         opacity: 0,
         scale: 0.8,
@@ -322,6 +401,7 @@ startButton.addEventListener('click', () => {
     init()
     animate()
     spawnEnemies()
+    spawnUpgrades()
     gsap.to('#startModal', {
         opacity: 0,
         scale: 0.8,
