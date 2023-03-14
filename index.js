@@ -149,6 +149,7 @@ function init() {
     animationId
     score = 0
     scoreEl.innerHTML = 0
+    checkMusicToggle()
 };
 
 function spawnEnemies() {
@@ -181,9 +182,19 @@ function spawnEnemies() {
     }, 1000)
 }
 
-function animate() {
+function checkMusicToggle() {
     const backgroundMusic = document.querySelector('#backgroundMusic');
-backgroundMusic.play();
+    const musicToggle = document.querySelector('.switch input[type="checkbox"]');
+
+    if (musicToggle.checked) {
+        backgroundMusic.play();
+    } else {
+        backgroundMusic.pause();
+    }
+};
+
+function animate() {
+    checkMusicToggle()
     animationId = requestAnimationFrame(animate)
     c.fillStyle = 'rgb(0, 0, 0, 0.1)'
     c.fillRect(0, 0, canvas.width, canvas.height)
