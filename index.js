@@ -306,10 +306,16 @@ function animate() {
         enemy.update()
 
         //end game (player death)
+        /*function clearGame() {
+            clearInterval(intervalId);
+            clearInterval(upgradeInterval);
+        }*/
         const dist = Math.hypot(player.x - enemy.x, player.y - enemy.y)
+        //if distance between enemy and player is less than 1px, end game
         if (dist - enemy.radius - player.radius < 1) {
             cancelAnimationFrame(animationId)
-            clearInterval(intervalId, upgradeInterval)
+            clearInterval(intervalId)
+            clearInterval(upgradeInterval)
             backgroundMusic.pause();
             backgroundMusic.currentTime = 0;
 
