@@ -273,6 +273,8 @@ function animate() {
     c.fillRect(0, 0, canvas.width, canvas.height)
     player.draw();
 
+    //all loops start at end of the array and iterate backwards
+    //this makes it easier to remove items from the array
     for (let index = particles.length - 1; index >= 0; index--) {
         const particle = particles[index]
         if (particle.alpha <= 0) {
@@ -295,12 +297,17 @@ function animate() {
         }
     };
 
+    //Upgrade item / player tracking / hit detection
     for (let index = upgrades.length -1; index >= 0; index--) {
         const upgrade = upgrades[index]
         upgrade.update()
 
-        const upgradeDist = Math.hypot(player.x - upgrade.x, player.y - upgrade.y)
-        if (upgradeDist - upgrade.radius - player.radius < 1) {
+        const dist = Math.hypot(player.x - upgrade.x, player.y - upgrade.y)
+        //hit detection:
+        if (dist - upgrade.radius - player.radius < 1) {
+            score += 250
+            scoreEl.innerHTML = score
+            upgrades.splice(index, 1)
             console.log('Upgrade acquired! (upgrade item hit detection active)');
         }
     }
