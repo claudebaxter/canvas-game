@@ -298,6 +298,11 @@ function animate() {
     for (let index = upgrades.length -1; index >= 0; index--) {
         const upgrade = upgrades[index]
         upgrade.update()
+
+        const upgradeDist = Math.hypot(player.x - upgrade.x, player.y - upgrade.y)
+        if (upgradeDist - upgrade.radius - player.radius < 1) {
+            console.log('Upgrade acquired! (upgrade item hit detection active)');
+        }
     }
 
     for (let index = enemies.length - 1; index >= 0; index--) {
@@ -305,11 +310,7 @@ function animate() {
     
         enemy.update()
 
-        //end game (player death)
-        /*function clearGame() {
-            clearInterval(intervalId);
-            clearInterval(upgradeInterval);
-        }*/
+        //dist tracks distance between enemies and player
         const dist = Math.hypot(player.x - enemy.x, player.y - enemy.y)
         //if distance between enemy and player is less than 1px, end game
         if (dist - enemy.radius - player.radius < 1) {
