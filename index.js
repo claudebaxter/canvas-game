@@ -5,6 +5,8 @@ https://chriscourses.com/courses/javascript-games/videos/project-setup
 TODOs:
 
 1) Add upgrade items / upgrade particle physics
+    (upgrade items / hit det added, just need to add
+    upgrade player / particle physics)
 2) Add leaderboard to track high scores
 3) Add boss fights*/
 
@@ -72,6 +74,7 @@ class Projectile {
         this.radius = radius 
         this.color = color
         this.velocity = velocity
+        this.scatterShot = false;
     }
     draw() {
         c.beginPath()
@@ -275,6 +278,8 @@ function animate() {
 
     //all loops start at end of the array and iterate backwards
     //this makes it easier to remove items from the array
+    //this loop updates/animates particles, and removes them
+    //from the particles array when the alpha attr is <= 0
     for (let index = particles.length - 1; index >= 0; index--) {
         const particle = particles[index]
         if (particle.alpha <= 0) {
@@ -283,7 +288,7 @@ function animate() {
             particle.update();
         }
     };
-
+    //animate projectiles and remove from array at edge of screen
     for (let index = projectiles.length - 1; index >= 0; index--) {
         const projectile = projectiles[index]
 
@@ -301,14 +306,19 @@ function animate() {
     for (let index = upgrades.length -1; index >= 0; index--) {
         const upgrade = upgrades[index]
         upgrade.update()
-
+        //track distance between player and upgrade item
         const dist = Math.hypot(player.x - upgrade.x, player.y - upgrade.y)
-        //hit detection:
+        //upgrade item/ player hit detection
         if (dist - upgrade.radius - player.radius < 1) {
             score += 250
             scoreEl.innerHTML = score
-            upgrades.splice(index, 1)
-            console.log('Upgrade acquired! (upgrade item hit detection active)');
+            gsap.to(upgrade, {
+                radius: upgrade.radius - 10,
+                onComplete: () => {
+                    upgrades.splice(index, 1)
+                    console.log('Upgrade acquired! (upgrade item hit detection active)');
+                }
+            })
         }
     }
 
@@ -338,7 +348,7 @@ function animate() {
 
         for (let projectilesIndex = projectiles.length - 1; projectilesIndex >= 0; projectilesIndex--) {
             const projectile = projectiles[projectilesIndex]
-
+            //tracking 
             const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y)
             
             //projectile enemy collision 
