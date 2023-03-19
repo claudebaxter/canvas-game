@@ -68,7 +68,7 @@ class Player {
 };
 
 class Projectile {
-    constructor(x, y, radius, color, velocity) {
+    constructor(x, y, radius, color, velocity, scatterShot) {
         this.x = x
         this.y = y
         this.radius = radius 
@@ -87,6 +87,11 @@ class Projectile {
         this.draw()
         this.x = this.x + this.velocity.x
         this.y = this.y + this.velocity.y
+
+        if (this.hasUpgrade) {
+            this.scatterShot = true;
+            console.log("scattershot:", this.scatterShot)
+        }        
     }
 };
 
@@ -317,6 +322,9 @@ function animate() {
                 onComplete: () => {
                     upgrades.splice(index, 1)
                     console.log('Upgrade acquired! (upgrade item hit detection active)');
+                    projectiles.forEach(projectile => {
+                        projectile.hasUpgrade = true;
+                    });
                 }
             })
         }
