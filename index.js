@@ -1,9 +1,7 @@
 /*ASAteroids is a modified version of Base Defense Game from 
 Chris' Courses, which can be found here: 
 https://chriscourses.com/courses/javascript-games/videos/project-setup 
-
 TODOs:
-
 1) Add upgrade items / upgrade particle physics
     (upgrade items / hit det added, just need to add
     upgrade player / particle physics)
@@ -74,7 +72,8 @@ class Projectile {
         this.radius = radius 
         this.color = color
         this.velocity = velocity
-        this.scatterShot = false;
+        this.scatterShot = scatterShot || false;
+        this.localScatterShot = this.scatterShot;
     }
     draw() {
         c.beginPath()
@@ -90,6 +89,7 @@ class Projectile {
 
         if (this.hasUpgrade) {
             this.scatterShot = true;
+            this.localScatterShot = this.scatterShot;
             console.log("scattershot:", this.scatterShot)
         }        
     }
@@ -408,9 +408,24 @@ addEventListener('click', (event) => {
         y: Math.sin(angle) * 5
     }
 
-    projectiles.push(new Projectile(
-        canvas.width/2, canvas.height / 2, 5, 'white', velocity
-    ))
+    if (projectiles.length === 0 || !projectiles[0].localScatterShot) {
+        //if scatterShot is not active, create one bullet
+        projectiles.push(new Projectile(
+            canvas.width / 2, canvas.height / 2, 5, 'white', velocity
+        ))
+    } else {
+        // if scatterShot is active, create multiple bullets
+        for (let i = 0; i < 5; i++) {
+            const spreadAngle = (Math.PI / 25) * (i - 2);
+            const spreadVelocity = {
+                x: Math.cos(angle + spreadAngle) * 5,
+                y: Math.sin(angle + spreadAngle) * 5
+            }
+            projectiles.push(new Projectile(
+                canvas.width/2, canvas.height / 2, 5, 'white', spreadVelocity, false
+            ));
+        }
+    }
 });
 
 button.addEventListener('click', () => {
