@@ -72,8 +72,6 @@ class Projectile {
         this.radius = radius 
         this.color = color
         this.velocity = velocity
-        this.scatterShot = scatterShot || false;
-        this.localScatterShot = this.scatterShot;
     }
     draw() {
         c.beginPath()
@@ -86,12 +84,6 @@ class Projectile {
         this.draw()
         this.x = this.x + this.velocity.x
         this.y = this.y + this.velocity.y
-
-        if (this.hasUpgrade) {
-            this.scatterShot = true;
-            this.localScatterShot = this.scatterShot;
-            console.log("scattershot:", this.scatterShot)
-        }        
     }
 };
 
@@ -188,6 +180,16 @@ let animationId;
 let intervalId;
 let upgradeInterval
 let score = 0;
+let scatterShotActive = false;
+let scatterShotTimeoutId = null;
+
+function startScatterShot() {
+  scatterShotActive = true;
+  clearTimeout(scatterShotTimeoutId);
+  scatterShotTimeoutId = setTimeout(() => {
+    scatterShotActive = false;
+  }, 10000); // set to 5 seconds for example, adjust as needed
+}
 
 function init() {
     player = new Player(x, y, 15)
@@ -260,7 +262,7 @@ function spawnUpgrades() {
         upgradeImage.src = upgradeSprite[Math.floor(Math.random() * upgradeSprite.length)];
         upgrades.push(new Upgrade(x, y, radius, color, velocity, upgradeImage))
         console.log('New upgrade deployed!', upgrades)
-    }, 60000)
+    }, 30000)
 }
 
 function checkMusicToggle() {
@@ -322,9 +324,7 @@ function animate() {
                 onComplete: () => {
                     upgrades.splice(index, 1)
                     console.log('Upgrade acquired! (upgrade item hit detection active)');
-                    projectiles.forEach(projectile => {
-                        projectile.hasUpgrade = true;
-                    });
+                    startScatterShot();
                 }
             })
         }
@@ -408,21 +408,21 @@ addEventListener('click', (event) => {
         y: Math.sin(angle) * 5
     }
 
-    if (projectiles.length === 0 || !projectiles[0].localScatterShot) {
+    if (!scatterShotActive/*projectiles.length === 0 || !projectiles[0].localScatterShot*/) {
         //if scatterShot is not active, create one bullet
         projectiles.push(new Projectile(
             canvas.width / 2, canvas.height / 2, 5, 'white', velocity
         ))
     } else {
         // if scatterShot is active, create multiple bullets
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i <= 5; i++) {
             const spreadAngle = (Math.PI / 25) * (i - 2);
             const spreadVelocity = {
                 x: Math.cos(angle + spreadAngle) * 5,
                 y: Math.sin(angle + spreadAngle) * 5
             }
             projectiles.push(new Projectile(
-                canvas.width/2, canvas.height / 2, 5, 'white', spreadVelocity, false
+                canvas.width/2, canvas.height / 2, 5, 'white', spreadVelocity, true
             ));
         }
     }
