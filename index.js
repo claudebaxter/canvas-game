@@ -28,7 +28,6 @@ const enemyFiles = [
     "icon-xmr.svg"
 ];
 const enemySprite = enemyFiles.map(file => enemyDir + file);
-console.log(enemySprite);
 //upgrade icons directory and array
 const upgradeDir = "./upgrades/";
 const upgradeFiles = [
@@ -41,7 +40,6 @@ const upgradeFiles = [
     "icon-trts.svg"
 ];
 const upgradeSprite = upgradeFiles.map(file => upgradeDir + file);
-console.log(upgradeSprite);
 
 const scoreEl = document.querySelector('#scoreEl');
 const modal = document.querySelector('#modal');
@@ -66,7 +64,7 @@ class Player {
 };
 
 class Projectile {
-    constructor(x, y, radius, color, velocity, scatterShot) {
+    constructor(x, y, radius, color, velocity) {
         this.x = x
         this.y = y
         this.radius = radius 
@@ -261,7 +259,7 @@ function spawnUpgrades() {
         const upgradeImage = new Image();
         upgradeImage.src = upgradeSprite[Math.floor(Math.random() * upgradeSprite.length)];
         upgrades.push(new Upgrade(x, y, radius, color, velocity, upgradeImage))
-        console.log('New upgrade deployed!', upgrades)
+        console.log('New upgrade deployed!', upgradeImage)
     }, 30000)
 }
 
@@ -317,14 +315,40 @@ function animate() {
         const dist = Math.hypot(player.x - upgrade.x, player.y - upgrade.y)
         //upgrade item/ player hit detection
         if (dist - upgrade.radius - player.radius < 1) {
+            let upgradeImage = upgrade.upgradeImage
+            let acquiredUpgrade = upgradeImage.src.match(/\/([^/]+)\.[^.]+$/)[1];
             score += 250
             scoreEl.innerHTML = score
+            //gsap animate shrink upgrade when it touches player
             gsap.to(upgrade, {
+                //actual shrink physics:
                 radius: upgrade.radius - 10,
                 onComplete: () => {
+                    //remove upgrade from upgrades array after shrinking
                     upgrades.splice(index, 1)
-                    console.log('Upgrade acquired! (upgrade item hit detection active)');
-                    startScatterShot();
+                    //based on upgrade type, set upgrade effects:
+                    if (acquiredUpgrade == "icon-afd") {
+                        console.log('Scatter Shot Acquired!', upgrade.upgradeImage);
+                        startScatterShot();
+                    } else if (acquiredUpgrade == "icon-algo") {
+                        console.log('Shield Acquired!', upgrade.upgradeImage);
+                        startScatterShot();
+                    } else if (acquiredUpgrade == "icon-dc") {
+                        console.log('Rapid Fire Acquired!', upgrade.upgradeImage);
+                        startScatterShot();
+                    } else if (acquiredUpgrade == "icon-grad") {
+                        console.log('Bombs Acquired!', upgrade.upgradeImage);
+                        startScatterShot();
+                    } else if (acquiredUpgrade == "icon-ogs") {
+                        console.log('Gnomes Acquired!', upgrade.upgradeImage);
+                        startScatterShot();
+                    } else if (acquiredUpgrade == "icon-puddin") {
+                        console.log('Rear Cannons Acquired!', upgrade.upgradeImage);
+                        startScatterShot();
+                    } else if (acquiredUpgrade == "icon-trts") {
+                        console.log('Treats acquired:', upgrade.upgradeImage);
+                        startScatterShot();
+                    }
                 }
             })
         }
