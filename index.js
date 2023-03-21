@@ -4,7 +4,9 @@ https://chriscourses.com/courses/javascript-games/videos/project-setup
 TODOs:
 1) Add upgrade items / upgrade particle physics
     (upgrade items / hit det added, just need to add
-    upgrade player / particle physics)
+        upgrade player / particle physics)
+    (scattershot and shield particle physics are working but need improvement
+        all upgrade items are divided between these two powerups for now)
 2) Add leaderboard to track high scores
 3) Add boss fights*/
 
@@ -180,6 +182,8 @@ let upgradeInterval
 let score = 0;
 let scatterShotActive = false;
 let scatterShotTimeoutId = null;
+let shieldActive = false;
+let shieldTimeoutId = null;
 
 function startScatterShot() {
   scatterShotActive = true;
@@ -187,6 +191,27 @@ function startScatterShot() {
   scatterShotTimeoutId = setTimeout(() => {
     scatterShotActive = false;
   }, 10000); // set to 5 seconds for example, adjust as needed
+}
+
+function startShield() {
+    shieldActive = true;
+    shieldTimeoutId = setTimeout(() => {
+        shieldActive = false;
+    }, 15000)
+
+    const startTime = performance.now();
+    function shieldAnimate() {
+        const elapsedTime = performance.now() - startTime;
+            c.beginPath();
+            c.arc(player.x, player.y, player.radius + 50, 0, Math.PI * 2, false);
+            c.strokeStyle = 'blue';
+            c.lineWidth = 10;
+            c.stroke();
+            if (elapsedTime < 10000) {
+                requestAnimationFrame(shieldAnimate);
+            }
+    }
+    shieldAnimate();
 }
 
 function init() {
@@ -275,6 +300,7 @@ function checkMusicToggle() {
 };
 
 function animate() {
+    console.log(shieldActive);
     checkMusicToggle()
     animationId = requestAnimationFrame(animate)
     c.fillStyle = 'rgb(0, 0, 0, 0.1)'
@@ -332,19 +358,19 @@ function animate() {
                         startScatterShot();
                     } else if (acquiredUpgrade == "icon-algo") {
                         console.log('Shield Acquired!', upgrade.upgradeImage);
-                        startScatterShot();
+                        startShield();
                     } else if (acquiredUpgrade == "icon-dc") {
                         console.log('Rapid Fire Acquired!', upgrade.upgradeImage);
                         startScatterShot();
                     } else if (acquiredUpgrade == "icon-grad") {
                         console.log('Bombs Acquired!', upgrade.upgradeImage);
-                        startScatterShot();
+                        startShield();
                     } else if (acquiredUpgrade == "icon-ogs") {
                         console.log('Gnomes Acquired!', upgrade.upgradeImage);
                         startScatterShot();
                     } else if (acquiredUpgrade == "icon-puddin") {
                         console.log('Rear Cannons Acquired!', upgrade.upgradeImage);
-                        startScatterShot();
+                        startShield();
                     } else if (acquiredUpgrade == "icon-trts") {
                         console.log('Treats acquired:', upgrade.upgradeImage);
                         startScatterShot();
@@ -361,6 +387,8 @@ function animate() {
 
         //dist tracks distance between enemies and player
         const dist = Math.hypot(player.x - enemy.x, player.y - enemy.y)
+        const borderDist = Math.hypot(player.x - enemy.x, player.y - enemy.y)
+        if (!shieldActive) {
         //if distance between enemy and player is less than 1px, end game
         if (dist - enemy.radius - player.radius < 1) {
             cancelAnimationFrame(animationId)
@@ -376,6 +404,25 @@ function animate() {
                 ease: 'expo'
             })
             modalScore.innerHTML = score
+        }
+        } else {
+            if (borderDist - enemy.radius - player.radius + 50 < 1) {
+                //enemy particle explosion on touching shield
+                for (let i = 0; i < enemy.radius * 2; i++) {
+                    particles.push(
+                        new Particle(
+                            enemy.x, 
+                            enemy.y, 
+                            Math.random() * 2, 
+                            enemy.color, 
+                            {
+                            x: (Math.random() - 0.5) * (Math.random() * 8),
+                            y: (Math.random() - 0.5) * (Math.random() * 8)
+                            }
+                        )
+                    )
+                }
+            }
         }
 
         for (let projectilesIndex = projectiles.length - 1; projectilesIndex >= 0; projectilesIndex--) {
