@@ -204,10 +204,10 @@ function startShield() {
         const elapsedTime = performance.now() - startTime;
             c.beginPath();
             c.arc(player.x, player.y, player.radius + 50, 0, Math.PI * 2, false);
-            c.strokeStyle = 'blue';
-            c.lineWidth = 10;
+            c.strokeStyle = 'purple';
+            c.lineWidth = 7;
             c.stroke();
-            if (elapsedTime < 10000) {
+            if (elapsedTime < 15000) {
                 requestAnimationFrame(shieldAnimate);
             }
     }
@@ -223,6 +223,10 @@ function init() {
     animationId
     score = 0
     scoreEl.innerHTML = 0
+    scatterShotActive = false
+    scatterShotTimeoutId = null
+    shieldActive = false
+    shieldTimeoutId = null
     checkMusicToggle()
 };
 
@@ -285,7 +289,7 @@ function spawnUpgrades() {
         upgradeImage.src = upgradeSprite[Math.floor(Math.random() * upgradeSprite.length)];
         upgrades.push(new Upgrade(x, y, radius, color, velocity, upgradeImage))
         console.log('New upgrade deployed!', upgradeImage)
-    }, 30000)
+    }, 40000)
 }
 
 function checkMusicToggle() {
@@ -300,7 +304,6 @@ function checkMusicToggle() {
 };
 
 function animate() {
-    console.log(shieldActive);
     checkMusicToggle()
     animationId = requestAnimationFrame(animate)
     c.fillStyle = 'rgb(0, 0, 0, 0.1)'
@@ -343,8 +346,6 @@ function animate() {
         if (dist - upgrade.radius - player.radius < 1) {
             let upgradeImage = upgrade.upgradeImage
             let acquiredUpgrade = upgradeImage.src.match(/\/([^/]+)\.[^.]+$/)[1];
-            score += 250
-            scoreEl.innerHTML = score
             //gsap animate shrink upgrade when it touches player
             gsap.to(upgrade, {
                 //actual shrink physics:
@@ -373,7 +374,7 @@ function animate() {
                         startShield();
                     } else if (acquiredUpgrade == "icon-trts") {
                         console.log('Treats acquired:', upgrade.upgradeImage);
-                        startScatterShot();
+                        startShield();
                     }
                 }
             })
@@ -387,26 +388,26 @@ function animate() {
 
         //dist tracks distance between enemies and player
         const dist = Math.hypot(player.x - enemy.x, player.y - enemy.y)
-        const borderDist = Math.hypot(player.x - enemy.x, player.y - enemy.y)
+        const borderDist = dist - player.radius - 55;
         if (!shieldActive) {
         //if distance between enemy and player is less than 1px, end game
-        if (dist - enemy.radius - player.radius < 1) {
-            cancelAnimationFrame(animationId)
-            clearInterval(intervalId)
-            clearInterval(upgradeInterval)
-            backgroundMusic.pause();
-            backgroundMusic.currentTime = 0;
+            if (dist - enemy.radius - player.radius < 1) {
+                cancelAnimationFrame(animationId)
+                clearInterval(intervalId)
+                clearInterval(upgradeInterval)
+                backgroundMusic.pause();
+                backgroundMusic.currentTime = 0;
 
 
-            modal.style.display = 'block'
-            gsap.fromTo('#modal', {scale: 0.8, opacity: 0}, {
-                scale: 1, opacity: 1,
-                ease: 'expo'
-            })
-            modalScore.innerHTML = score
-        }
+                modal.style.display = 'block'
+                gsap.fromTo('#modal', {scale: 0.8, opacity: 0}, {
+                    scale: 1, opacity: 1,
+                    ease: 'expo'
+                })
+                modalScore.innerHTML = score
+            } 
         } else {
-            if (borderDist - enemy.radius - player.radius + 50 < 1) {
+            if (borderDist - enemy.radius < 1) {
                 //enemy particle explosion on touching shield
                 for (let i = 0; i < enemy.radius * 2; i++) {
                     particles.push(
@@ -421,6 +422,18 @@ function animate() {
                             }
                         )
                     )
+                }
+                if (enemy.radius - 10 > 5) {
+                    score += 100
+                    scoreEl.innerHTML = score
+                    gsap.to(enemy, {
+                        radius: enemy.radius - enemy.radius
+                    })
+                } else {
+                    //remove enemy if they are destroyed
+                    score += 150
+                    scoreEl.innerHTML = score
+                    enemies.splice(index, 1)
                 }
             }
         }
