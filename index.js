@@ -289,7 +289,7 @@ function spawnUpgrades() {
         upgradeImage.src = upgradeSprite[Math.floor(Math.random() * upgradeSprite.length)];
         upgrades.push(new Upgrade(x, y, radius, color, velocity, upgradeImage))
         console.log('New upgrade deployed!', upgradeImage)
-    }, 40000)
+    }, 30000)
 }
 
 function checkMusicToggle() {
@@ -506,7 +506,7 @@ addEventListener('click', (event) => {
                 y: Math.sin(angle + spreadAngle) * 5
             }
             projectiles.push(new Projectile(
-                canvas.width/2, canvas.height / 2, 5, 'white', spreadVelocity, true
+                canvas.width/2, canvas.height / 2, 5, 'red', spreadVelocity, true
             ));
         }
     }
