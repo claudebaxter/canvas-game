@@ -375,16 +375,16 @@ function animate() {
                         startScatterShot();
                     } else if (acquiredUpgrade == "icon-grad") {
                         console.log('Bombs Acquired!', upgrade.upgradeImage);
-                        startShield();
+                        startBombShot();
                     } else if (acquiredUpgrade == "icon-ogs") {
                         console.log('Gnomes Acquired!', upgrade.upgradeImage);
-                        startScatterShot();
+                        startShield();
                     } else if (acquiredUpgrade == "icon-puddin") {
                         console.log('Rear Cannons Acquired!', upgrade.upgradeImage);
-                        startShield();
+                        startScatterShot();
                     } else if (acquiredUpgrade == "icon-trts") {
                         console.log('Treats acquired:', upgrade.upgradeImage);
-                        startShield();
+                        startBombShot();
                     }
                 }
             })
@@ -502,24 +502,34 @@ addEventListener('click', (event) => {
         y: Math.sin(angle) * 5
     }
 
-    if (!scatterShotActive/*projectiles.length === 0 || !projectiles[0].localScatterShot*/) {
-        //if scatterShot is not active, create one bullet
-        projectiles.push(new Projectile(
-            canvas.width / 2, canvas.height / 2, 5, 'white', velocity
-        ))
-    } else {
-        // if scatterShot is active, create multiple bullets
-        for (let i = 0; i <= 5; i++) {
-            const spreadAngle = (Math.PI / 25) * (i - 2);
-            const spreadVelocity = {
-                x: Math.cos(angle + spreadAngle) * 5,
-                y: Math.sin(angle + spreadAngle) * 5
+    if (scatterShotActive) 
+        {
+            // if scatterShot is active, create multiple bullets
+            for (let i = 0; i <= 5; i++) {
+                const spreadAngle = (Math.PI / 25) * (i - 2);
+                const spreadVelocity = {
+                    x: Math.cos(angle + spreadAngle) * 5,
+                    y: Math.sin(angle + spreadAngle) * 5
+                }
+                projectiles.push(new Projectile(
+                    canvas.width/2, canvas.height / 2, 5, 'red', spreadVelocity, true
+                ));
             }
+        
+        } 
+    else if (bombShotActive) 
+        {
             projectiles.push(new Projectile(
-                canvas.width/2, canvas.height / 2, 5, 'red', spreadVelocity, true
-            ));
+                canvas.width / 2, canvas.height / 2, 25, 'blue', velocity
+            ))
         }
-    }
+    else
+        {
+            //if upgrade is not active, shoot regular projectiles:
+            projectiles.push(new Projectile(
+                canvas.width / 2, canvas.height / 2, 5, 'white', velocity
+            ))
+        }
 });
 
 button.addEventListener('click', () => {
