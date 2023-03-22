@@ -176,6 +176,7 @@ let projectiles = [];
 let enemies = [];
 let particles = [];
 let upgrades = [];
+let shockwaves = [];
 let animationId;
 let intervalId;
 let upgradeInterval
@@ -186,6 +187,8 @@ let shieldActive = false;
 let shieldTimeoutId = null;
 let bombShotActive = false;
 let bombShotTimeoutId = null;
+let bombExploded = false;
+let lastBlueProjectile = null;
 
 function startScatterShot() {
   scatterShotActive = true;
@@ -230,6 +233,7 @@ function init() {
     enemies = []
     particles = []
     upgrades = []
+    shockwaves = []
     animationId
     score = 0
     scoreEl.innerHTML = 0
@@ -237,6 +241,9 @@ function init() {
     scatterShotTimeoutId = null
     shieldActive = false
     shieldTimeoutId = null
+    bombShotActive = false
+    bombShotTimeoutId = null
+    bombExploded = false
     checkMusicToggle()
 };
 
@@ -517,11 +524,48 @@ addEventListener('click', (event) => {
             }
         
         } 
-    else if (bombShotActive) 
+    else if (bombShotActive && !bombExploded) 
         {
             projectiles.push(new Projectile(
                 canvas.width / 2, canvas.height / 2, 25, 'blue', velocity
             ))
+            //set bombExploded to true to indicate that bomb has been fired
+            bombExploded = true;
+            //set timeout to reset to false after (if needed, will go after this code)
+        }
+    else if (bombShotActive && bombExploded) 
+        {
+            const blueIndex = projectiles.findIndex(p => p.color === "blue")
+            const projectile = projectiles[blueIndex]
+            const shockwave = shockwaves[blueIndex]
+            projectile.update();
+
+            projectiles.splice(blueIndex, 1);
+
+            c.globalAlpha = 0.5; // set opacity to 50%
+            c.fillStyle = "blue"; // set fill color to blue
+            c.beginPath();
+            c.arc(projectile.x, projectile.y, 250, 0, 2 * Math.PI);
+            c.fill();
+            c.globalAlpha = 1; // reset opacity to 100%
+
+            for (let i = 0; i <= 360; i +=10) {
+                const shockwaveAngle = i * Math.PI / 180;
+                const shockwaveVelocity = {
+                    x: Math.cos(shockwaveAngle) * 10,
+                    y: Math.sin(shockwaveAngle) * 10
+                }
+                shockwaves.push(new Projectile(
+                    canvas.width / 2, canvas.height / 2, 0, 'white', shockwaveVelocity, true, 100
+                ));
+            }
+            //remove enemies inside shockwave radius
+            enemies = enemies.filter((enemy) => {
+                const distance = Math.hypot(enemy.x - shockwave.x, enemy.y - shockwave.y );
+                return distance > 100 && distance < 200;
+            });
+            //reset bombExploded to false
+            bombExploded = false;
         }
     else
         {
