@@ -188,7 +188,6 @@ let shieldTimeoutId = null;
 let bombShotActive = false;
 let bombShotTimeoutId = null;
 let bombExploded = false;
-let lastBlueProjectile = null;
 
 function startScatterShot() {
   scatterShotActive = true;
@@ -350,6 +349,7 @@ function animate() {
             projectile.y + projectile.radius < 0 ||
             projectile.y - projectile.radius > canvas.height) {
             projectiles.splice(index, 1)
+            bombExploded = false;
         }
     };
 
