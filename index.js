@@ -184,14 +184,24 @@ let scatterShotActive = false;
 let scatterShotTimeoutId = null;
 let shieldActive = false;
 let shieldTimeoutId = null;
+let bombShotActive = false;
+let bombShotTimeoutId = null;
 
 function startScatterShot() {
   scatterShotActive = true;
   clearTimeout(scatterShotTimeoutId);
   scatterShotTimeoutId = setTimeout(() => {
     scatterShotActive = false;
-  }, 10000); // set to 5 seconds for example, adjust as needed
+  }, 10000); // set to 10 seconds for example, adjust as needed
 }
+
+function startBombShot() {
+    bombShotActive = true;
+    clearTimeout(bombShotTimeoutId);
+    bombShotTimeoutId = setTimeout(() => {
+      bombShotActive = false;
+    }, 10000); // set to 10 seconds for example, adjust as needed
+  }
 
 function startShield() {
     shieldActive = true;
