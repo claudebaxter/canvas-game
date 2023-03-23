@@ -7,6 +7,8 @@ TODOs:
         upgrade player / particle physics)
     (scattershot and shield particle physics are working but need improvement
         all upgrade items are divided between these two powerups for now)
+    (bombshot upgrade is live but need to fix score for each enemy killed,
+            and only kill enemies inside the blast radius.)
 2) Add leaderboard to track high scores
 3) Add boss fights*/
 
@@ -187,7 +189,7 @@ let shieldActive = false;
 let shieldTimeoutId = null;
 let bombShotActive = false;
 let bombShotTimeoutId = null;
-let bombExploded = false;
+let bombFired = false;
 
 function startScatterShot() {
   scatterShotActive = true;
@@ -242,7 +244,7 @@ function init() {
     shieldTimeoutId = null
     bombShotActive = false
     bombShotTimeoutId = null
-    bombExploded = false
+    bombFired = false
     checkMusicToggle()
 };
 
@@ -349,7 +351,7 @@ function animate() {
             projectile.y + projectile.radius < 0 ||
             projectile.y - projectile.radius > canvas.height) {
             projectiles.splice(index, 1)
-            bombExploded = false;
+            bombFired = false;
         }
     };
 
@@ -370,25 +372,30 @@ function animate() {
                 onComplete: () => {
                     //remove upgrade from upgrades array after shrinking
                     upgrades.splice(index, 1)
-                    //based on upgrade type, set upgrade effects:
+                    //based on upgrade item, set upgrade type:
                     if (acquiredUpgrade == "icon-afd") {
                         console.log('Scatter Shot Acquired!', upgrade.upgradeImage);
                         startScatterShot();
+                        //startBombShot();
                     } else if (acquiredUpgrade == "icon-algo") {
                         console.log('Shield Acquired!', upgrade.upgradeImage);
                         startShield();
+                        //startBombShot();
                     } else if (acquiredUpgrade == "icon-dc") {
                         console.log('Rapid Fire Acquired!', upgrade.upgradeImage);
                         startScatterShot();
+                        //startBombShot();
                     } else if (acquiredUpgrade == "icon-grad") {
                         console.log('Bombs Acquired!', upgrade.upgradeImage);
                         startBombShot();
                     } else if (acquiredUpgrade == "icon-ogs") {
                         console.log('Gnomes Acquired!', upgrade.upgradeImage);
                         startShield();
+                        //startBombShot();
                     } else if (acquiredUpgrade == "icon-puddin") {
                         console.log('Rear Cannons Acquired!', upgrade.upgradeImage);
                         startScatterShot();
+                        //startBombShot();
                     } else if (acquiredUpgrade == "icon-trts") {
                         console.log('Treats acquired:', upgrade.upgradeImage);
                         startBombShot();
@@ -486,12 +493,14 @@ function animate() {
                         radius: enemy.radius - 10
                     })
                     projectiles.splice(projectilesIndex, 1)
+                    bombFired = false
                 } else {
                     //remove enemy if they are destroyed
                     score += 150
                     scoreEl.innerHTML = score
                     enemies.splice(index, 1)
                     projectiles.splice(projectilesIndex, 1)
+                    bombFired = false
                 }
             }
         }
@@ -524,22 +533,21 @@ addEventListener('click', (event) => {
             }
         
         } 
-    else if (bombShotActive && !bombExploded) 
+    else if (bombShotActive && !bombFired) 
         {
             projectiles.push(new Projectile(
                 canvas.width / 2, canvas.height / 2, 25, 'blue', velocity
             ))
-            //set bombExploded to true to indicate that bomb has been fired
-            bombExploded = true;
+            //set bombFired to true to indicate that bomb has been fired
+            bombFired = true;
             //set timeout to reset to false after (if needed, will go after this code)
         }
-    else if (bombShotActive && bombExploded) 
+    else if (bombShotActive && bombFired) 
         {
             const blueIndex = projectiles.findIndex(p => p.color === "blue")
             const projectile = projectiles[blueIndex]
             const shockwave = shockwaves[blueIndex]
             projectile.update();
-
             projectiles.splice(blueIndex, 1);
 
             c.globalAlpha = 0.5; // set opacity to 50%
@@ -556,16 +564,30 @@ addEventListener('click', (event) => {
                     y: Math.sin(shockwaveAngle) * 10
                 }
                 shockwaves.push(new Projectile(
-                    canvas.width / 2, canvas.height / 2, 0, 'white', shockwaveVelocity, true, 100
+                    canvas.width / 2, canvas.height / 2, 0, 'white', shockwaveVelocity, true, 100, shockwaves.length
                 ));
+                for (let i = 0; i < shockwaves.length; i++) {
+                    const shockwave = shockwaves[i];
+                    if (shockwave.radius > 50) {
+                        shockwaves.splice(i, 1);
+                        i--;
+                        continue;
+                    }
+                shockwave.update();
+                }
+                    
             }
-            //remove enemies inside shockwave radius
+            //remove/kill enemies inside shockwave radius
             enemies = enemies.filter((enemy) => {
+                const shockwave = shockwaves.find(s => s.index === blueIndex);
+                if (!shockwave) return false;
                 const distance = Math.hypot(enemy.x - shockwave.x, enemy.y - shockwave.y );
                 return distance > 100 && distance < 200;
             });
-            //reset bombExploded to false
-            bombExploded = false;
+            //reset bombFired to false to shoot new bombShots (before upgrade wears out)
+            score += 150
+            scoreEl.innerHTML = score
+            bombFired = false;
         }
     else
         {
