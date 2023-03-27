@@ -376,26 +376,21 @@ function animate() {
                     if (acquiredUpgrade == "icon-afd") {
                         console.log('Scatter Shot Acquired!', upgrade.upgradeImage);
                         startScatterShot();
-                        //startBombShot();
                     } else if (acquiredUpgrade == "icon-algo") {
                         console.log('Shield Acquired!', upgrade.upgradeImage);
                         startShield();
-                        //startBombShot();
                     } else if (acquiredUpgrade == "icon-dc") {
                         console.log('Rapid Fire Acquired!', upgrade.upgradeImage);
                         startScatterShot();
-                        //startBombShot();
                     } else if (acquiredUpgrade == "icon-grad") {
                         console.log('Bombs Acquired!', upgrade.upgradeImage);
                         startBombShot();
                     } else if (acquiredUpgrade == "icon-ogs") {
                         console.log('Gnomes Acquired!', upgrade.upgradeImage);
                         startShield();
-                        //startBombShot();
                     } else if (acquiredUpgrade == "icon-puddin") {
                         console.log('Rear Cannons Acquired!', upgrade.upgradeImage);
                         startScatterShot();
-                        //startBombShot();
                     } else if (acquiredUpgrade == "icon-trts") {
                         console.log('Treats acquired:', upgrade.upgradeImage);
                         startBombShot();
