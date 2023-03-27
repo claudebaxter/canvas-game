@@ -190,13 +190,15 @@ let shieldTimeoutId = null;
 let bombShotActive = false;
 let bombShotTimeoutId = null;
 let bombFired = false;
+let rapidFireActive = false;
+let rapidFireTimeoutId = null;
 
 function startScatterShot() {
   scatterShotActive = true;
   clearTimeout(scatterShotTimeoutId);
   scatterShotTimeoutId = setTimeout(() => {
     scatterShotActive = false;
-  }, 10000); // set to 10 seconds for example, adjust as needed
+  }, 10000); // set to 10 seconds
 }
 
 function startBombShot() {
@@ -204,14 +206,22 @@ function startBombShot() {
     clearTimeout(bombShotTimeoutId);
     bombShotTimeoutId = setTimeout(() => {
       bombShotActive = false;
-    }, 10000); // set to 10 seconds for example, adjust as needed
-  }
+    }, 10000); // set to 10 seconds
+}
+
+function startRapidFire() {
+    rapidFireActive = true;
+    clearTimeout(rapidFireTimeoutId);
+    rapidFireTimeoutId = setTimeout(() => {
+        rapidFireActive = false;
+    }, 10000); // set to 10 seconds
+}
 
 function startShield() {
     shieldActive = true;
     shieldTimeoutId = setTimeout(() => {
         shieldActive = false;
-    }, 15000)
+    }, 15000) // set to 10 seconds
 
     const startTime = performance.now();
     function shieldAnimate() {
@@ -245,6 +255,8 @@ function init() {
     bombShotActive = false
     bombShotTimeoutId = null
     bombFired = false
+    rapidFireActive = false
+    rapidFireTimeoutId = null
     checkMusicToggle()
 };
 
@@ -381,7 +393,7 @@ function animate() {
                         startShield();
                     } else if (acquiredUpgrade == "icon-dc") {
                         console.log('Rapid Fire Acquired!', upgrade.upgradeImage);
-                        startScatterShot();
+                        startRapidFire();
                     } else if (acquiredUpgrade == "icon-grad") {
                         console.log('Bombs Acquired!', upgrade.upgradeImage);
                         startBombShot();
@@ -528,6 +540,13 @@ addEventListener('click', (event) => {
             }
         
         } 
+    else if (rapidFireActive)
+        {
+            console.log('rapid fire works!');
+            projectiles.push(new Projectile(
+                canvas.width / 2, canvas.height / 2, 5, 'red', velocity
+            ))
+        }
     else if (bombShotActive && !bombFired) 
         {
             projectiles.push(new Projectile(
