@@ -215,6 +215,7 @@ function startRapidFire() {
     clearTimeout(rapidFireTimeoutId);
     rapidFireTimeoutId = setTimeout(() => {
         rapidFireActive = false;
+        clearInterval(rapidFireIntervalId);
     }, 10000); // set to 10 seconds
 }
 
@@ -390,30 +391,24 @@ function animate() {
                     if (acquiredUpgrade == "icon-afd") {
                         console.log('Scatter Shot Acquired!', upgrade.upgradeImage);
                         startScatterShot();
-                        //startRapidFire();
                     } else if (acquiredUpgrade == "icon-algo") {
                         console.log('Shield Acquired!', upgrade.upgradeImage);
                         startShield();
-                        //startRapidFire();
                     } else if (acquiredUpgrade == "icon-dc") {
                         console.log('Rapid Fire Acquired!', upgrade.upgradeImage);
                         startRapidFire();
                     } else if (acquiredUpgrade == "icon-grad") {
                         console.log('Bombs Acquired!', upgrade.upgradeImage);
                         startBombShot();
-                        //startRapidFire();
                     } else if (acquiredUpgrade == "icon-ogs") {
                         console.log('Gnomes Acquired!', upgrade.upgradeImage);
-                        startShield();
-                        //startRapidFire();
+                        startRapidFire();
                     } else if (acquiredUpgrade == "icon-puddin") {
                         console.log('Rear Cannons Acquired!', upgrade.upgradeImage);
                         startScatterShot();
-                        //startRapidFire();
                     } else if (acquiredUpgrade == "icon-trts") {
                         console.log('Treats acquired:', upgrade.upgradeImage);
                         startBombShot();
-                        //startRapidFire();
                     }
                 }
             })
@@ -621,23 +616,31 @@ addEventListener('click', (event) => {
         }
 });
 
+const rapidVelocity = { x: 0, y: 0 };
+
+//function to update velocity based on mouse current position
+function updateVelocity(event) {
+    const angle = Math.atan2(
+    event.clientY - canvas.height / 2, 
+    event.clientX - canvas.width / 2);
+    rapidVelocity.x = Math.cos(angle) * 5;
+    rapidVelocity.y = Math.sin(angle) * 5;
+}
+
 //mousedown event listener turns on rapid fire if upgrade is active:
 addEventListener('mousedown', (event) => {
     if (rapidFireActive)
         {
-            const angle = Math.atan2(
-                event.clientY - canvas.height / 2, 
-                event.clientX - canvas.width / 2);
-
-            const velocity = {
-                x: Math.cos(angle) * 5,
-                y: Math.sin(angle) * 5
-            };
-
-            console.log('rapid fire works!');
+            
+            
+            //call updateVelocity immediately to set initial velocity
+            updateVelocity(event);
+            //mousemove event listener updates velocity as the mouse moves
+            canvas.addEventListener('mousemove', updateVelocity);
+            
             rapidFireIntervalId = setInterval(() => {
                 projectiles.push(new Projectile(
-                    canvas.width / 2, canvas.height / 2, 5, 'red', velocity
+                    canvas.width / 2, canvas.height / 2, 5, 'red', rapidVelocity
                 ));
             }, 100); // fire a projectile every 100 milliseconds
         }
@@ -646,6 +649,7 @@ addEventListener('mousedown', (event) => {
 //mouseup event listener turns off rapid fire
 addEventListener('mouseup', (event) => {
     clearInterval(rapidFireIntervalId);
+    canvas.removeEventListener('mousemove', updateVelocity);
 });
 
 button.addEventListener('click', () => {
