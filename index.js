@@ -3,12 +3,7 @@ Chris' Courses, which can be found here:
 https://chriscourses.com/courses/javascript-games/videos/project-setup 
 TODOs:
 1) Add upgrade items / upgrade particle physics
-    (upgrade items / hit det added, just need to add
-        upgrade player / particle physics)
-    (scattershot and shield particle physics are working but need improvement
-        all upgrade items are divided between these two powerups for now)
-    (bombshot upgrade is live but need to fix score for each enemy killed,
-            and only kill enemies inside the blast radius.)
+    (bombshot need to fix score for each enemy killed)
 2) Add leaderboard to track high scores
 3) Add boss fights*/
 
@@ -178,7 +173,6 @@ let projectiles = [];
 let enemies = [];
 let particles = [];
 let upgrades = [];
-let shockwaves = [];
 let animationId;
 let intervalId;
 let upgradeInterval
@@ -246,7 +240,6 @@ function init() {
     enemies = []
     particles = []
     upgrades = []
-    shockwaves = []
     animationId
     score = 0
     scoreEl.innerHTML = 0
@@ -564,44 +557,22 @@ addEventListener('click', (event) => {
         {
             const blueIndex = projectiles.findIndex(p => p.color === "blue")
             const projectile = projectiles[blueIndex]
-            const shockwave = shockwaves[blueIndex]
             projectile.update();
             projectiles.splice(blueIndex, 1);
 
+            //draw shockwave when bomb explodes
             c.globalAlpha = 0.5; // set opacity to 50%
-            c.fillStyle = "blue"; // set fill color to blue
+            c.fillStyle = "blue"; // set shockwave background color
             c.beginPath();
-            c.arc(projectile.x, projectile.y, 250, 0, 2 * Math.PI);
+            c.arc(projectile.x, projectile.y, 250, 0, 2 * Math.PI); 
             c.fill();
             c.globalAlpha = 1; // reset opacity to 100%
 
-            for (let i = 0; i <= 360; i +=10) {
-                const shockwaveAngle = i * Math.PI / 180;
-                const shockwaveVelocity = {
-                    x: Math.cos(shockwaveAngle) * 10,
-                    y: Math.sin(shockwaveAngle) * 10
-                }
-                shockwaves.push(new Projectile(
-                    canvas.width / 2, canvas.height / 2, 0, 'white', shockwaveVelocity, true, 100, shockwaves.length
-                ));
-                for (let i = 0; i < shockwaves.length; i++) {
-                    const shockwave = shockwaves[i];
-                    if (shockwave.radius > 50) {
-                        shockwaves.splice(i, 1);
-                        i--;
-                        continue;
-                    }
-                shockwave.update();
-                }
-                    
-            }
             //remove/kill enemies inside shockwave radius
             enemies = enemies.filter((enemy) => {
-                const shockwave = shockwaves.find(s => s.index === blueIndex);
-                if (!shockwave) return false;
-                const distance = Math.hypot(enemy.x - shockwave.x, enemy.y - shockwave.y );
-                return distance > 100 && distance < 200;
-            });
+                const distance = Math.hypot(enemy.x - projectile.x, enemy.y - projectile.y);
+                return distance > 250 ? true : false; // keep enemies outside the blue circle
+              });             
             //reset bombFired to false to shoot new bombShots (before upgrade wears out)
             score += 150
             scoreEl.innerHTML = score
