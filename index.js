@@ -329,6 +329,14 @@ function checkMusicToggle() {
     }
 };
 
+//helper function communicates score using postmessage 
+function sendScoreToParent(score) {
+    window.parent.postMessage({ type: 'PLAYER_SCORE', score: score }, '*');
+
+    console.log("postmessage:", score);
+};
+  
+
 function animate() {
     checkMusicToggle()
     animationId = requestAnimationFrame(animate)
@@ -432,6 +440,8 @@ function animate() {
                     ease: 'expo'
                 })
                 modalScore.innerHTML = score
+
+                sendScoreToParent(score);
             } 
         } else {
             if (borderDist - enemy.radius < 1) {
