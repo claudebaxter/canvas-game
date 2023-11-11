@@ -12,4 +12,4 @@ When the player shoots enemies, they will shrink/explode into particles. When an
 
 When an enemy touches the player, the game ends and the final score is shown, with the option to restart a new game.
 
-To play the live ASAteroids demo, click <a href=https://elborracho420.github.io/canvas-game/ title="Canvas Game">here.</a>
+To play the live ASAteroids demo, click <a href=https://claudebaxter.github.io/canvas-game/ title="Canvas Game">here.</a>
